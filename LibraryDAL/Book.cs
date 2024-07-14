@@ -1,25 +1,30 @@
 ﻿#pragma warning disable CS8602, CS8604
 using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net;
+using System.Transactions;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 
 namespace LibraryDAL
 {
     public class Book
     {
-        private int _bookId;
+        private int _id;
         private string _title;
         private string _author;
         private string _genre;
         private bool _isAvaliable;
 
-        public int BookID
+        public int ID
         {
-            get { return _bookId; }
+            get { return _id; }
             set
             {
-                if (value <= 0)
-                    throw new ArgumentException("Book ID must be a positive integer.");
-                _bookId = value;
+                if (value >= 0)
+                    _id = value;
+                else
+                    throw new ArgumentException("ID must be a positvie integer");
             }
         }
 
@@ -65,11 +70,16 @@ namespace LibraryDAL
 
         public Book()
         {
-            _bookId = -1;
             _title = "default";
             _author = "default";
             _genre = "default";
             _isAvaliable = true;
+        }
+
+
+        public override string ToString()
+        {
+            return $"Title: {Title}, Author: {Author}, Genre: {Genre}, Avaliability: {IsAvaliable}";
         }
 
     }

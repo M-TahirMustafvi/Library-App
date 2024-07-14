@@ -1,40 +1,56 @@
 ﻿#pragma warning disable CS8602, CS8604
 using System;
 using System.Text;
-
+using Microsoft.Data.SqlClient;
 
 namespace LibraryDAL
 {
     public class DAL
     {
 
-        #region BookClassFunction
-        //Adds book to the library.txt file firstly checks every possible edge case
+        string conStr = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Library;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+
+        #region Books Function
         public void addBook(Book book)
         {
-            if (book == null || book.BookID <= 0 || book.Title == "default" || book.Author == "default" || book.Genre == "default")
+            if (book == null || book.Title == "default" || book.Author == "default" || book.Genre == "default")
             {
                 Console.WriteLine("Uncompelete or wrong information, book was'nt added in library");
                 return;
             }
-            else if (GetBookById(book.BookID) != null)
-            {
-                Console.WriteLine("Book is already there");
-                return;
-            }
+
             else
             {
-                FileStream fin = new FileStream("Book.txt", FileMode.Append);
-                StreamWriter stream = new StreamWriter(fin);
-                string data = $"{book.BookID},{book.Title},{book.Author},{book.Genre},{book.IsAvaliable}";
-                stream.WriteLine(data);
-                stream.Close();
-                fin.Close();
+
+                using (SqlConnection con = new SqlConnection(conStr))
+                {
+                    string query = "Insert into Books(Title, Genre, Author) values(@t, @g, @a)";
+                    con.Open();
+                    SqlParameter param1 = new SqlParameter("@t", book.Title);
+                    SqlParameter param2 = new SqlParameter("@g", book.Genre);
+                    SqlParameter param3 = new SqlParameter("@a", book.Author);
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.Add(param1);
+                        cmd.Parameters.Add(param2);
+                        cmd.Parameters.Add(param3);
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows < 1)
+                            Console.WriteLine("Transaction Failed due to an error");
+                        else
+                            Console.WriteLine("Book Added Succesfully to library");
+                    }
+
+                }
+
             }
-            Console.WriteLine("Book was successfully added to library");
+            Console.Write("Press Any key to return to mian menu :");
+            Console.ReadKey(false);
         }
 
-        //Updates the book, by first searching on bases of book id, aslo handles every edge case
+
+
+
         public void updateBook(Book book)
         {
             if (book == null)
@@ -43,188 +59,179 @@ namespace LibraryDAL
                 return;
             }
 
-            if (book.BookID <= 0 || book.Title == "default" || book.Author == "default" || book.Genre == "default")
+            if (book.Title == "default" || book.Author == "default" || book.Genre == "default")
             {
                 Console.WriteLine("Uncompelete or wrong information, book was'nt updated in library");
                 return;
             }
 
-            StringBuilder result = new StringBuilder();
-            bool bookFlag = false;
 
-            FileStream fout = new FileStream("Book.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
-
-
-            string data = "";
-            while ((data = stream.ReadLine()) != null)
+            using (SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
 
-                string[] arr = data.Split(',');
-                if (int.Parse(arr[0]) == book.BookID)
+                string query = "update books set Title = @t, Author = @a, Genre = @g where id = @identity";
+                con.Open();
+
+                SqlParameter param1 = new SqlParameter("identity", book.ID);
+                SqlParameter param2 = new SqlParameter("t", book.Title);
+                SqlParameter param3 = new SqlParameter("a", book.Author);
+                SqlParameter param4 = new SqlParameter("g", book.Genre);
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    bookFlag = true;
-                    data = $"{book.BookID},{book.Title},{book.Author},{book.Genre},{book.IsAvaliable}";
+                    cmd.Parameters.Add(param1);
+                    cmd.Parameters.Add(param2);
+                    cmd.Parameters.Add(param3);
+                    cmd.Parameters.Add(param4);
+
+                    int rows = cmd.ExecuteNonQuery();
+                    if (rows < 1)
+                        Console.WriteLine("Transaction Failed due to an error");
+                    else
+                        Console.WriteLine("Book Updated Succesfully in library");
                 }
-                result.AppendLine(data);
+
+
+                Console.WriteLine("Press any key to return to main menu");
+                Console.ReadKey(false);
             }
-
-            stream.Close();
-            fout.Close();
-
-            if (!bookFlag)
-            {
-                Console.WriteLine("No such book");
-                return;
-            }
-
-
-            FileStream fin = new FileStream("Book.txt", FileMode.Create);
-            StreamWriter wStream = new StreamWriter(fin);
-            wStream.WriteLine(result);
-            wStream.Close();
-            fin.Close();
         }
 
-        //Searches for the book in the file, and returns true if id matches else otherwise
+
+
+
+
         public Book GetBookById(int id)
         {
-            FileStream fout = new FileStream("Book.txt", FileMode.OpenOrCreate);
-            StreamReader stream = new StreamReader(fout);
 
-            string data = "";
-            bool bookFlag = false;
-            string[] arr = { };
-
-            while ((data = stream.ReadLine()) != null)
+            using (SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
+                string query = "select * from Books where id = @identity";
 
-                arr = data.Split(',');
-                if (int.Parse(arr[0]) == id)
+                SqlParameter param = new SqlParameter("identity", id);
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    bookFlag = true;
-                    break;
+                    cmd.Parameters.Add(param);
+                    con.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Book newBook = new Book();
+                            newBook.ID = reader.GetInt32(0);
+                            newBook.Title = reader.GetString(1);
+                            newBook.Author = reader.GetString(2);
+                            newBook.Genre = reader.GetString(3);
+                            newBook.IsAvaliable = reader.GetBoolean(4);
+                            return newBook;
+                        }
+                    }
                 }
-            }
-
-            stream.Close();
-            fout.Close();
-
-            if (!bookFlag)
-            {
-                Console.WriteLine("No such book in library");
                 return null;
             }
-
-            Book found = new Book();
-            found.BookID = int.Parse(arr[0]);
-            found.Title = arr[1];
-            found.Author = arr[2];
-            found.Genre = arr[3];
-            found.IsAvaliable = bool.Parse(arr[4]);
-            return found;
         }
+
+
 
         //Returns all books that match query, and returns List if found or empty string
         public List<Book> searchBooks(string query)
         {
             List<Book> books = new List<Book>();
 
-            FileStream fout = new FileStream("Book.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
 
-            string data = "";
-            string[] arr = { };
-            while ((data = stream.ReadLine()) != null)
+            using (SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
+                string query1 = "select * from Books where Title = @qu or Author = @qu or Genre = @qu";
+                SqlParameter param = new SqlParameter("qu", query);
 
-                arr = data.Split(',');
-                if (arr[1] == query || arr[2] == query || arr[3] == query)
+                using (SqlCommand cmd = new SqlCommand(query1, con))
                 {
-                    Book found = new Book();
-                    found.BookID = int.Parse(arr[0]);
-                    found.Title = arr[1];
-                    found.Author = arr[2];
-                    found.Genre = arr[3];
-                    found.IsAvaliable = bool.Parse(arr[4]);
-
-                    books.Add(found);
+                    cmd.Parameters.Add(param);
+                    con.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Book newBook = new Book();
+                            newBook.ID = reader.GetInt32(0);
+                            newBook.Title = reader.GetString(1);
+                            newBook.Author = reader.GetString(2);
+                            newBook.Genre = reader.GetString(3);
+                            newBook.IsAvaliable = reader.GetBoolean(4);
+                            books.Add(newBook);
+                        }
+                    }
                 }
             }
-
-            stream.Close();
-            fout.Close();
             return books;
         }
+
 
         //Returns all books
         public List<Book> GetAllBooks()
         {
             List<Book> books = new List<Book>();
 
-            FileStream fout = new FileStream("Book.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
 
-            string data = "";
-            while ((data = stream.ReadLine()) != null)
+            using (SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
+                string query = "select * from Books";
 
-                string[] arr = data.Split(',');
-                Book found = new Book();
-                found.BookID = int.Parse(arr[0]);
-                found.Title = arr[1];
-                found.Author = arr[2];
-                found.Genre = arr[3];
-                found.IsAvaliable = bool.Parse(arr[4]);
-
-                books.Add(found);
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Book newBook = new Book();
+                            newBook.ID = reader.GetInt32(0);
+                            newBook.Title = reader.GetString(1);
+                            newBook.Author = reader.GetString(2);
+                            newBook.Genre = reader.GetString(3);
+                            newBook.IsAvaliable = reader.GetBoolean(4);
+                            books.Add(newBook);
+                        }
+                    }
+                }
             }
-            stream.Close();
-            fout.Close();
-
             return books;
         }
+
+
 
         //Remove the book based on ID, the idea is to input all books in a string excluding the
         //book to be removed and then rewriting the string in the Book.txt
         public void removeBook(int _bookId)
         {
-            FileStream fout = new FileStream("Book.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
-
-            string data = "";
-            StringBuilder result = new StringBuilder();
-            bool bookFlag = false;
-            while ((data = stream.ReadLine()) != null)
+            if (GetBookById(_bookId) == null)
             {
-                if (data.Length <= 0) continue;
-
-                string[] arr = data.Split(',');
-                if (int.Parse(arr[0]) == _bookId)
-                {
-                    //Skips the string to be removed here
-                    bookFlag = true;
-                    continue;
-                }
-                result.AppendLine(data);
+                Console.WriteLine("No such book in the library");
+                return;
             }
 
-            stream.Close();
-            fout.Close();
+            else
+            {
 
+                using (SqlConnection con = new SqlConnection(conStr))
+                {
+                    string query = "Delete from Books where id = @id";
+                    con.Open();
+                    SqlParameter param1 = new SqlParameter("@id", _bookId);
 
-            if (!bookFlag) { Console.WriteLine("No such book"); return; }
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.Add(param1);
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows < 1)
+                            Console.WriteLine("Deletion Failed due to an error");
+                        else
+                            Console.WriteLine("Book Removed Succesfully from library");
+                    }
 
-            //Updating File
-            FileStream fin = new FileStream("Book.txt", FileMode.Create);
-            StreamWriter wStream = new StreamWriter(fin);
-            wStream.WriteLine(result);
-            wStream.Close();
-            fout.Close();
+                }
+
+            }
         }
         #endregion
 
@@ -232,32 +239,47 @@ namespace LibraryDAL
 
 
         #region Borrower Class Function
+
+
         /// <summary>
         /// Register a new Borrower, checks if already in there, or email already in there
         /// </summary>
-        /// <param name="borrower">Borrower object</param>
+        /// <param name = "borrower" > Borrower object</param>
         public void registerBorrower(Borrower borrower)
         {
-            if (borrower == null || borrower.BorrowerId == -1 || borrower.Name == "default" || borrower.Email == "default")
+            if (borrower == null || borrower.Name == "default" || borrower.Email == "default")
             {
                 Console.WriteLine("Wrong or uncompelete info, borrower not registered ");
                 return;
             }
-
-            if (findBorrower(borrower.BorrowerId, borrower.Email))
+            else
             {
-                Console.WriteLine("Registeration failed!");
-                return;
-            }
+                using (SqlConnection con = new SqlConnection(conStr))
+                {
+                    string query = "Insert into Borrowers(Name, Email) values(@n, @e)";
+                    con.Open();
+                    SqlParameter param1 = new SqlParameter("@n", borrower.Name);
+                    SqlParameter param2 = new SqlParameter("@e", borrower.Email);
 
-            FileStream fin = new FileStream("Borrowers.txt", FileMode.Append);
-            StreamWriter streamWriter = new StreamWriter(fin);
-            string data = $"{borrower.BorrowerId},{borrower.Name},{borrower.Email}";
-            streamWriter.WriteLine(data);
-            streamWriter.Close();
-            fin.Close();
-            Console.WriteLine("Borrower successfully added!");
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.Add(param1);
+                        cmd.Parameters.Add(param2);
+
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows < 1)
+                            Console.WriteLine("Transaction Failed due to an error");
+                        else
+                            Console.WriteLine("Borrower Added Succesfully to library");
+                    }
+                }
+
+                Console.WriteLine("Press any key to return to main menu");
+                Console.ReadKey(false);
+            }
         }
+
+
 
         /// <summary>
         /// Updates borrower, checks all possible edge cases
@@ -265,87 +287,74 @@ namespace LibraryDAL
         /// <param name="borrower">Borrower object</param>
         public void updateBorrower(Borrower borrower)
         {
-            if (borrower == null || borrower.BorrowerId == -1 || borrower.Name == "default" || borrower.Email == "default")
+
+            if (borrower == null || borrower.Name == "default" || borrower.Email == "default")
             {
-                Console.WriteLine("Wrong or uncompelete info, borrower not registered ");
+                Console.WriteLine("Uncompelete or wrong information, book was'nt updated in library");
                 return;
             }
 
-            FileStream fout = new FileStream("Borrowers.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
 
-            string data = "";
-            StringBuilder result = new StringBuilder();
-            bool borrowerFlag = false;
-
-            while ((data = stream.ReadLine()) != null)
+            using (SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
 
-                string[] arr = data.Split(',');
-                if (int.Parse(arr[0]) == borrower.BorrowerId)
+                string query = "update borrowers set Name = @n, Email = @m where id = @identity";
+                con.Open();
+
+                SqlParameter param1 = new SqlParameter("identity", borrower.BorrowerId);
+                SqlParameter param2 = new SqlParameter("n", borrower.Name);
+                SqlParameter param3 = new SqlParameter("m", borrower.Email);
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    borrowerFlag = true;
-                    data = $"{borrower.BorrowerId},{borrower.Name},{borrower.Email}";
+                    cmd.Parameters.Add(param1);
+                    cmd.Parameters.Add(param2);
+                    cmd.Parameters.Add(param3);
+
+                    int rows = cmd.ExecuteNonQuery();
+                    if (rows < 1)
+                        Console.WriteLine("Transaction Failed, No Such Borrower found");
+                    else
+                        Console.WriteLine("Borrower Updated Succesfully in library");
                 }
-                result.AppendLine(data);
-            }
 
-            stream.Close();
-            fout.Close();
-            if (!borrowerFlag)
-            {
-                Console.WriteLine("No such Borrower");
-                return;
             }
-
-            FileStream fin = new FileStream("Borrowers.txt", FileMode.Create);
-            StreamWriter wStream = new StreamWriter(fin);
-            wStream.WriteLine(result);
-            wStream.Close();
-            fout.Close();
         }
+
+
 
         /// <summary>
         /// Deletes a borrower, uses the same idea as were used in delete book
         /// </summary>
         /// <param name="_bookId"> int book id</param>
-        public void DeleteBorrower(int _bookId)
+        public void DeleteBorrower(int _borrowerId)
         {
-            FileStream fout = new FileStream("Borrowers.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
-
-            string data = "";
-            StringBuilder result = new StringBuilder();
-            bool borrowerFlag = false;
-
-            while ((data = stream.ReadLine()) != null)
+            using (SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
+                string query = "Delete from Borrowers where id = @BId";
+                con.Open();
+                SqlParameter param1 = new SqlParameter("BId", _borrowerId);
 
-                string[] arr = data.Split(',');
-                if (int.Parse(arr[0]) == _bookId)
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    borrowerFlag = true;
-                    continue;
+                    cmd.Parameters.Add(param1);
+                    int rows = cmd.ExecuteNonQuery();
+                    if (rows < 1)
+                        Console.WriteLine("Deletion Failed, No such Borrower found");
+                    else
+                        Console.WriteLine("Borrower Removed Succesfully from library");
                 }
-                result.AppendLine(data);
+
             }
-
-            stream.Close();
-            fout.Close();
-
-            if (!borrowerFlag) { Console.WriteLine("No such Borrower"); return; }
-
-
-
-            FileStream fin = new FileStream("Borrowers.txt", FileMode.Create);
-            StreamWriter wStream = new StreamWriter(fin);
-            wStream.WriteLine(result);
-            wStream.Close();
-            fout.Close();
         }
 
+
+        #endregion
+
+
+
+
+        #region Transaction Functions
 
         /// <summary>
         /// Performs the transaxtion, writes to transaction file, also handles each edge case
@@ -353,39 +362,52 @@ namespace LibraryDAL
         /// <param name="transaction">transaciton object</param>
         public void recordTransaction(Transaction transaction)
         {
-            if (transaction == null || transaction.TransactionId == -1 || transaction.BookID == -1 || transaction.BorrowerId == -1)
+            if (transaction == null || transaction.BookID == -1 || transaction.BorrowerId == -1)
             {
-                Console.WriteLine("Wrong or uncompelete data!");
+                Console.WriteLine("Wrong or uncompelete data, Transaction Failed!");
                 return;
             }
 
-            if (!findBorrower(transaction.BorrowerId))
-            {
-                Console.WriteLine("Please first register Borrower");
-                return;
-            }
-
-            if (findBookAndTransact(transaction.BorrowerId, transaction.BookID, transaction.IsBorrowed))
-            {
-                FileStream fin = new FileStream("Transaction.txt", FileMode.Append);
-                StreamWriter stream = new StreamWriter(fin);
-                string data = $"{transaction.TransactionId},{transaction.BorrowerId},{transaction.BookID},{transaction.Date},{transaction.IsBorrowed}";
-                stream.WriteLine(data);
-                Console.WriteLine("Transaction compeleted Successfully");
-                stream.Close();
-                fin.Close();
-            }
             else
-                Console.WriteLine("Transaction was not compeleted due to an error");
+            {
+                if (GetBookById(transaction.BookID) != null)
+                {
+                    if (transaction.IsBorrowed)
+                    {
+                        if (borrowBook(transaction))
+                            Console.WriteLine("Book Borrowed Successfully");
+
+                        else
+                            Console.WriteLine("Book was already issued, Borrow failed!");
+                    }
+
+                    else
+                    {
+                        if (returnBook(transaction))
+                        {
+                            Console.WriteLine("Book Returend Successfully");
+
+                            if (!WriteTransaction(transaction))
+                                Console.WriteLine("There was an error recording transaction");
+                            else
+                                Console.WriteLine("Transaction recorded successfully");
+                        }
+                        else
+                        {
+                            Console.Write("Book was not borrowed by this borrower, Transaction failed!");
+                        }
+                    }
+                }
+                else
+                    Console.WriteLine("No Such Book! Transaction Failed");
+
+            }
 
         }
-        #endregion
 
 
 
 
-
-        #region Transaction Functions
         /// <summary>
         /// returns bookID's of all books that are borrowed by borrower of provided borrowerId till now ID, else returns empty list
         /// </summary>
@@ -395,31 +417,31 @@ namespace LibraryDAL
         {
             List<Transaction> transactions = new List<Transaction>();
 
-            FileStream fout = new FileStream("Transaction.txt", FileMode.OpenOrCreate);
-            StreamReader stream = new StreamReader(fout);
-
-            string data = "";
-            string[] arr = { };
-
-            while ((data = stream.ReadLine()) != null)
+            using(SqlConnection con = new SqlConnection(conStr))
             {
-                if (data.Length <= 0) continue;
-
-                arr = data.Split(',');
-                if (int.Parse(arr[1]) == borrowerId)
+                string query = "select * from [Transaction] where borrowerId = @borrower and isBorrowed = 1";
+                SqlParameter param1 = new SqlParameter("borrower", borrowerId);
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    Transaction found = new Transaction();
-                    found.TransactionId = int.Parse(arr[0]);
-                    found.BookID = int.Parse(arr[1]);
-                    found.BorrowerId = int.Parse(arr[2]);
-                    found.Date = DateTime.Parse(arr[3]);
-                    found.IsBorrowed = bool.Parse(arr[4]);
+                    con.Open();
+                    cmd.Parameters.Add(param1);
 
-                    transactions.Add(found);
+                    using(SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Transaction currTransact = new Transaction();
+                            currTransact.TransactionId = reader.GetInt32(0);
+                            currTransact.BorrowerId = reader.GetInt32(1);
+                            currTransact.BookID = reader.GetInt32(2);
+                            currTransact.Date = reader.GetDateTime(3);
+                            currTransact.IsBorrowed = reader.GetBoolean(4);
+                            transactions.Add(currTransact);
+                        }
+                    }
                 }
+
             }
-            stream.Close();
-            fout.Close();
             return transactions;
         }
 
@@ -428,181 +450,136 @@ namespace LibraryDAL
 
 
 
-
         #region Helper Functions
-        /// <summary>
-        /// Finds borrower on bases of id and email
-        /// Can send -1 in one of the parameter if One has to find on base of a single parameter
-        /// </summary>
-        /// <param name="id">id of borrower</param>
-        /// <param name="email">email of borrower</param>
-        /// <returns>Returns true if found, false otherWise!</returns>
-        public bool findBorrower(int id, string email)
+
+        private bool borrowBook(Transaction transaction)
         {
-            FileStream fout = new FileStream("Borrowers.txt", FileMode.OpenOrCreate);
-            StreamReader stream = new StreamReader(fout);
+            bool retVal = false;
+            Book newBook = GetBookById(transaction.BookID);
 
-            string data = "";
-            string[] arr = { };
-
-            while ((data = stream.ReadLine()) != null)
+            if (newBook.IsAvaliable)
             {
-                if (data.Length <= 0) continue;
-
-                arr = data.Split(',');
-                if (int.Parse(arr[0]) == id)
+                if(WriteTransaction(transaction))
                 {
-                    stream.Close();
-                    fout.Close();
-                    Console.WriteLine("Redundant ids are not allowed");
-                    return true;
-
-                }
-
-                if (arr[2] == email)
-                {
-                    stream.Close();
-                    fout.Close();
-                    Console.WriteLine("Redundant email is not allowed");
-                    return true;
-                }
-            }
-
-            stream.Close();
-            fout.Close();
-            return false;
-
-        }
-
-
-
-        /// <summary>
-        ///Helper function to find borrower on base of id
-        /// </summary>
-        /// <param name="id">int id</param>
-        /// <returns></returns>
-        public bool findBorrower(int id)
-        {
-            FileStream fout = new FileStream("Borrowers.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
-
-
-            string data = "";
-            while ((data = stream.ReadLine()) != null)
-            {
-                if (data.Length <= 0) continue;
-
-                string[] arr = data.Split(',');
-                if (int.Parse(arr[0]) == id)
-                {
-                    stream.Close();
-                    fout.Close();
-                    return true;
-                }
-
-            }
-
-
-            stream.Close();
-            fout.Close();
-            return false;
-        }
-
-        /// <summary>
-        /// Helper Funciton, Finds the book, performs transaction on base of argument issue, if issue == True, 
-        /// issues the book, else returns it, updates book status, and returs true if successfull, else fasle
-        /// Also check if the returning person has even issued book earlier or not, only allows to return the
-        /// book if same person has issued it earlier and yet not returend
-        /// </summary>
-        /// <param name="id"> id of the book to be performed transaction on</param>
-        /// <param name="issue">if issue == True, issues the book, else returns it</param>
-        /// <param name="borrower">borrower who wants to issue or return a book</param>
-        /// <returns>returns true if successfull, else fasle</returns>
-        public bool findBookAndTransact(int borrower, int id, bool issue)
-        {
-            FileStream fout = new FileStream("Book.txt", FileMode.Open);
-            StreamReader stream = new StreamReader(fout);
-            bool found = false;
-
-            string data = "";
-            StringBuilder result = new StringBuilder();
-            while ((data = stream.ReadLine()) != null)
-            {
-                if (data.Length <= 0) continue;
-
-                string[] arr = data.Split(',');
-                if (int.Parse(arr[0]) == id)
-                {
-                    found = true;
-                    if (issue)
+                    using (SqlConnection con = new SqlConnection(conStr))
                     {
-                        if (bool.Parse(arr[4]) == true)
+                        string query = $"Update Books set isAvaliable = 0 " +
+                                       $"where id = {newBook.ID}";
+                        con.Open();
+                        using (SqlCommand cmd = new SqlCommand(query, con))
                         {
-                            data = $"{arr[0]},{arr[1]},{arr[2]},{arr[3]},{false}";
-                            Console.WriteLine($"\n{data} Book issued successfully");
-                            issue = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nBook is not avaliabe, i.e, already issued!");
-                            stream.Close();
-                            fout.Close();
-                            return false;
+                            int rows = cmd.ExecuteNonQuery();
+                            if (rows < 1)
+                                retVal = false;
+                            else
+                                retVal = true;
                         }
                     }
+                }
+            }
+            else
+                retVal = false;
 
+            return retVal;
+        }
+
+        private bool returnBook(Transaction transaction)
+        {
+            bool retVal = false;
+            Book newBook = GetBookById(transaction.BookID);
+
+
+            bool borrowed = false;
+            List<LibraryDAL.Transaction> record = getBorrowedBookByBorrower(transaction.BorrowerId);
+            foreach(var transact in  record)
+            {
+                if (transact.IsBorrowed && transact.BookID == transaction.BookID)
+                    borrowed = true;
+            }
+
+            if (!newBook.IsAvaliable & borrowed)
+            {
+                using (SqlConnection con = new SqlConnection(conStr))
+                {
+                    string query = $"Update Books set isAvaliable = 1 " +
+                                   $"where id = {newBook.ID}";
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows < 1)
+                            retVal = false;
+                        else
+                            retVal = true;
+                    }
+                }
+
+            }
+            else
+                retVal = false;
+
+            return retVal;
+        }
+
+        private bool WriteTransaction(Transaction transaction)
+        {
+            bool retVal = false;
+            using (SqlConnection con = new SqlConnection(conStr))
+            {
+                string query = "INSERT INTO [Transaction] (BorrowerId, BookId, Date, isBorrowed) VALUES (@BorrowerId, @BookId, @Date, @IsBorrowed)";
+                SqlParameter param1 = new SqlParameter("BorrowerId", transaction.BorrowerId);
+                SqlParameter param2 = new SqlParameter("BookId", transaction.BookID);
+                SqlParameter param3 = new SqlParameter("Date", DateTime.Now);
+                SqlParameter param4 = new SqlParameter("IsBorrowed", transaction.IsBorrowed);
+
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.Add(param1);
+                    cmd.Parameters.Add(param2);
+                    cmd.Parameters.Add(param3);
+                    cmd.Parameters.Add(param4);
+                    int rows = cmd.ExecuteNonQuery();
+                    if (rows < 1)
+                        retVal = false;
                     else
+                        retVal = true;
+                }
+            }
+            return retVal;
+        }
+
+        public List<Borrower> GetAllBorrowers()
+        {
+            List<Borrower> borrowers = new List<Borrower>();
+
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            {
+                string query = "select * from Borrowers";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (bool.Parse(arr[4]) == false)
+                        while (reader.Read())
                         {
-                            List<Transaction> transactions = new List<Transaction>(); //for checkin same person is returning the book
-                            transactions = getBorrowedBookByBorrower(borrower);
-                            bool bookStatus = false;
-                            foreach (var trans in transactions)
-                            {
-                                if (trans.BookID == id)
-                                    Console.WriteLine(trans.IsBorrowed);
-                                bookStatus = trans.IsBorrowed;
-                            }
-
-                            if (!bookStatus)
-                            {
-                                Console.WriteLine("You havent issued this book so you cant return it");
-                                stream.Close();
-                                fout.Close();
-                                return false;
-                            }
-
-                            data = $"{arr[0]},{arr[1]},{arr[2]},{arr[3]},{true}";
-                            Console.WriteLine($"\n{data} Book returned successfully");
-                            issue = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nThis book was not issued, wrong input!");
-                            stream.Close();
-                            fout.Close();
-                            return false;
+                            Borrower newBorrower = new Borrower();
+                            newBorrower.BorrowerId = reader.GetInt32(0);
+                            newBorrower.Name = reader.GetString(1);
+                            newBorrower.Email = reader.GetString(2);
+                            borrowers.Add(newBorrower);
                         }
                     }
                 }
-                result.AppendLine(data);
-
             }
-            stream.Close();
-            fout.Close();
-
-
-            FileStream fin = new FileStream("Book.txt", FileMode.Create);
-            StreamWriter wStream = new StreamWriter(fin);
-            wStream.WriteLine(result);
-            wStream.Close();
-            fin.Close();
-
-            return false;
+            return borrowers;
         }
-
+        
         #endregion
 
     }
 }
+
+
