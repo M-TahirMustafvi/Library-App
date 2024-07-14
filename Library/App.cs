@@ -76,7 +76,7 @@ namespace Interface
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex);
                     Console.Write("\nPress Any Key To Continue....");
                     Console.ReadKey();
                 }

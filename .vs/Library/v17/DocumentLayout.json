@@ -7,8 +7,24 @@
       "RelativeMoniker": "D:0:0:{3A4D0324-E5B5-4351-A1BB-23B7D13F6F71}|Library\\Library.csproj|solutionrelative:library\\app.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|c:\\users\\moonm\\source\\repos\\library\\librarydal\\librarydal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|solutionrelative:librarydal\\librarydal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3A4D0324-E5B5-4351-A1BB-23B7D13F6F71}|Library\\Library.csproj|c:\\users\\moonm\\source\\repos\\library\\library\\menue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3A4D0324-E5B5-4351-A1BB-23B7D13F6F71}|Library\\Library.csproj|solutionrelative:library\\menue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|c:\\users\\moonm\\source\\repos\\library\\librarydal\\borrower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|solutionrelative:librarydal\\borrower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|c:\\users\\moonm\\source\\repos\\library\\librarydal\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|solutionrelative:librarydal\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|c:\\users\\moonm\\source\\repos\\library\\librarydal\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E2ECBEFF-00E3-47A4-8213-EAE228C94D8C}|LibraryDAL\\LibraryDAL.csproj|solutionrelative:librarydal\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,24 +54,76 @@
               "Title": "App.cs",
               "DocumentMoniker": "C:\\Users\\moonm\\source\\repos\\Library\\Library\\App.cs",
               "RelativeDocumentMoniker": "Library\\App.cs",
-              "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\Library\\App.cs",
-              "RelativeToolTip": "Library\\App.cs",
-              "ViewState": "AQIAADAAAACAAgAAAMAswEAAAAAqAAAA",
+              "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\Library\\App.cs*",
+              "RelativeToolTip": "Library\\App.cs*",
+              "ViewState": "AQIAADYAAAAAKjMzMzPzv04AAAAoAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-14T06:43:41.903Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Menue.cs",
               "DocumentMoniker": "C:\\Users\\moonm\\source\\repos\\Library\\Library\\Menue.cs",
               "RelativeDocumentMoniker": "Library\\Menue.cs",
               "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\Library\\Menue.cs",
               "RelativeToolTip": "Library\\Menue.cs",
-              "ViewState": "AQIAAPIAAADAyszMzMwkwPoAAABWAAAA",
+              "ViewState": "AQIAAEYAAAAAjpmZmZn5v3IAAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-14T06:21:44.426Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Transaction.cs",
+              "DocumentMoniker": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\Transaction.cs",
+              "RelativeDocumentMoniker": "LibraryDAL\\Transaction.cs",
+              "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\Transaction.cs",
+              "RelativeToolTip": "LibraryDAL\\Transaction.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-14T11:23:06.949Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Book.cs",
+              "DocumentMoniker": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\Book.cs",
+              "RelativeDocumentMoniker": "LibraryDAL\\Book.cs",
+              "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\Book.cs",
+              "RelativeToolTip": "LibraryDAL\\Book.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-14T11:23:07.345Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Borrower.cs",
+              "DocumentMoniker": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\Borrower.cs",
+              "RelativeDocumentMoniker": "LibraryDAL\\Borrower.cs",
+              "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\Borrower.cs",
+              "RelativeToolTip": "LibraryDAL\\Borrower.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-14T11:23:07.621Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LibraryDAL.cs",
+              "DocumentMoniker": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\LibraryDAL.cs",
+              "RelativeDocumentMoniker": "LibraryDAL\\LibraryDAL.cs",
+              "ToolTip": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\LibraryDAL.cs",
+              "RelativeToolTip": "LibraryDAL\\LibraryDAL.cs",
+              "ViewState": "AQIAAPkAAADAX2ZmZmYiwA8BAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-14T10:05:22.346Z",
               "EditorCaption": ""
             }
           ]

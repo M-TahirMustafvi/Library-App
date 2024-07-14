@@ -109,12 +109,16 @@ namespace Interface
             Console.Write("Borrower Registeration \n" +
            "-------------------------------------------------------------------------------------" +
                             "\n");
+            
             Borrower newBorrower = new Borrower();
             Console.Write("Enter Name: ");
             newBorrower.Name = Console.ReadLine().Trim();
             Console.Write("Enter Email: ");
             newBorrower.Email = Console.ReadLine().Trim();
             DAL.registerBorrower(newBorrower);
+
+            Console.WriteLine("Press any key to return to main menu");
+            Console.ReadKey(false);
         }
 
         public static void UpdateBorrower()

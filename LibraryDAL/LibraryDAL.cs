@@ -256,8 +256,23 @@ namespace LibraryDAL
             {
                 using (SqlConnection con = new SqlConnection(conStr))
                 {
-                    string query = "Insert into Borrowers(Name, Email) values(@n, @e)";
+
+                    string checkEmailQuery = "SELECT COUNT(*) FROM Borrowers WHERE Email = @Email";
                     con.Open();
+                    using (SqlCommand cmd = new SqlCommand(checkEmailQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", borrower.Email);
+
+                        int count = (int)cmd.ExecuteScalar();
+                        if (count > 0)
+                        {
+                            Console.WriteLine("Email already in use by another borrower.");
+                            return;
+                        }
+
+                    }
+
+                    string query = "Insert into Borrowers(Name, Email) values(@n, @e)";
                     SqlParameter param1 = new SqlParameter("@n", borrower.Name);
                     SqlParameter param2 = new SqlParameter("@e", borrower.Email);
 
@@ -273,9 +288,6 @@ namespace LibraryDAL
                             Console.WriteLine("Borrower Added Succesfully to library");
                     }
                 }
-
-                Console.WriteLine("Press any key to return to main menu");
-                Console.ReadKey(false);
             }
         }
 
@@ -297,9 +309,25 @@ namespace LibraryDAL
 
             using (SqlConnection con = new SqlConnection(conStr))
             {
+                
+                string checkEmailQuery = "SELECT COUNT(*) FROM Borrowers WHERE Email = @Email AND Id != @BorrowerId";
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(checkEmailQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@Email", borrower.Email);
+                    cmd.Parameters.AddWithValue("@BorrowerId", borrower.BorrowerId);
+
+                    int count = (int)cmd.ExecuteScalar();
+                    if (count > 0)
+                    {
+                        Console.WriteLine("Email already in use by another borrower.");
+                        return;
+                    }
+
+                }
+
 
                 string query = "update borrowers set Name = @n, Email = @m where id = @identity";
-                con.Open();
 
                 SqlParameter param1 = new SqlParameter("identity", borrower.BorrowerId);
                 SqlParameter param2 = new SqlParameter("n", borrower.Name);
