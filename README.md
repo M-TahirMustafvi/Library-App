@@ -15,8 +15,8 @@ This C# console application leverages ADO.NET for seamless connectivity to a dat
 
 - **Language:** C#
 - **Database Connectivity:** ADO.NET
-- **Database:** [Specify your database system]
-
+- **Project IDE:** Visual Studio
+- **Database System:** Microsoft SQL Client
 ## Installation and Setup
 
 1. **Clone the Repository:**
