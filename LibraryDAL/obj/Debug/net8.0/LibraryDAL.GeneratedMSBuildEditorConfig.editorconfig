@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = LibraryDAL
-build_property.ProjectDir = C:\Users\moonm\source\repos\Library\LibraryDAL\
+build_property.ProjectDir = C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

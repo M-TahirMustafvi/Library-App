@@ -1701,11 +1701,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\LibraryDAL.csproj",
+      "projectUniqueName": "C:\\Users\\moonm\\source\\repos\\cs21-web-engineering-assignment-2-M-TahirMustafvi\\LibraryDAL\\LibraryDAL.csproj",
       "projectName": "LibraryDAL",
-      "projectPath": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\LibraryDAL.csproj",
+      "projectPath": "C:\\Users\\moonm\\source\\repos\\cs21-web-engineering-assignment-2-M-TahirMustafvi\\LibraryDAL\\LibraryDAL.csproj",
       "packagesPath": "C:\\Users\\moonm\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\obj\\",
+      "outputPath": "C:\\Users\\moonm\\source\\repos\\cs21-web-engineering-assignment-2-M-TahirMustafvi\\LibraryDAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\moonm\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1760,7 +1760,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

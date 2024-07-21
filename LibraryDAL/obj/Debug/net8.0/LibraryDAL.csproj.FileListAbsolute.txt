@@ -11,3 +11,16 @@ C:\Users\moonm\source\repos\Library\LibraryDAL\obj\Debug\net8.0\LibraryDAL.pdb
 C:\Users\moonm\source\repos\Library\LibraryDAL\obj\Debug\net8.0\ref\LibraryDAL.dll
 C:\Users\moonm\source\repos\Library\LibraryDAL\obj\Debug\net8.0\LibraryDAL.sourcelink.json
 C:\Users\moonm\source\repos\Library\LibraryDAL\obj\Debug\net8.0\LibraryDAL.csproj.AssemblyReference.cache
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\bin\Debug\net8.0\LibraryDAL.deps.json
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\bin\Debug\net8.0\LibraryDAL.dll
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\bin\Debug\net8.0\LibraryDAL.pdb
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.csproj.AssemblyReference.cache
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.AssemblyInfoInputs.cache
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.AssemblyInfo.cs
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.csproj.CoreCompileInputs.cache
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.sourcelink.json
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.dll
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\refint\LibraryDAL.dll
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\LibraryDAL.pdb
+C:\Users\moonm\source\repos\cs21-web-engineering-assignment-2-M-TahirMustafvi\LibraryDAL\obj\Debug\net8.0\ref\LibraryDAL.dll

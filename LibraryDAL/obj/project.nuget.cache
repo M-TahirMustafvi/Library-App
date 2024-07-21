@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LYQDToiwhW8=",
+  "dgSpecHash": "mD6aSlOuMI0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\moonm\\source\\repos\\Library\\LibraryDAL\\LibraryDAL.csproj",
+  "projectFilePath": "C:\\Users\\moonm\\source\\repos\\cs21-web-engineering-assignment-2-M-TahirMustafvi\\LibraryDAL\\LibraryDAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moonm\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\moonm\\.nuget\\packages\\azure.identity\\1.11.3\\azure.identity.1.11.3.nupkg.sha512",

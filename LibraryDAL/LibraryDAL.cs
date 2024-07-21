@@ -8,7 +8,7 @@ namespace LibraryDAL
     public class DAL
     {
 
-        string conStr = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Library;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+        string conStr = "Data Source=(localdb)\\ProjectModels;Initial Catalog=Library;Integrated Security=True;";
 
         #region Books Function
         public void addBook(Book book)
@@ -44,8 +44,6 @@ namespace LibraryDAL
                 }
 
             }
-            Console.Write("Press Any key to return to mian menu :");
-            Console.ReadKey(false);
         }
 
 

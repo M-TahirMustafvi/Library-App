@@ -48,6 +48,9 @@ namespace Interface
             Console.Write("Genre :");
             newBook.Genre = Console.ReadLine().Trim();
             DAL.addBook(newBook);
+
+            Console.Write("\n\nPress any key to return to main menu...");
+            Console.ReadKey(false);
         }
 
 
@@ -117,7 +120,7 @@ namespace Interface
             newBorrower.Email = Console.ReadLine().Trim();
             DAL.registerBorrower(newBorrower);
 
-            Console.WriteLine("Press any key to return to main menu");
+            Console.Write("\n\nPress any key to return to main menu....");
             Console.ReadKey(false);
         }
 
@@ -175,13 +178,22 @@ namespace Interface
             LibraryDAL.Transaction newTransaction = new LibraryDAL.Transaction();
             Console.Write("\n\nEnter ID of book you wanna Borrow: ");
             newTransaction.BookID = int.Parse(Console.ReadLine().Trim());
-            Console.Write("Enter Borrower ID: ");
+
+            Console.Clear();
+
+            Console.Write("Book Borrow Menu \n" +
+                "-------------------------------------------------------------------------------------" +
+                "\n");
+            Console.WriteLine("\nBorrowers Catalogue:\n\n");
+            displayBorrowers();
+
+            Console.Write("\n\nEnter Borrower ID: ");
             newTransaction.BorrowerId = int.Parse(Console.ReadLine().Trim());
             newTransaction.Date = DateTime.Now;
             newTransaction.IsBorrowed = true;
             DAL.recordTransaction(newTransaction);
 
-            Console.WriteLine("Press any key to return to main menu.....");
+            Console.WriteLine("\n\nPress any key to return to main menu.....");
             Console.ReadKey(false);
         }
 
@@ -201,7 +213,7 @@ namespace Interface
             newTransaction.IsBorrowed = false;
             DAL.recordTransaction(newTransaction);
 
-            Console.WriteLine("\nPress any key to return to main menu.....");
+            Console.WriteLine("\n\nPress any key to return to main menu.....");
             Console.ReadKey(false);
         }
 
@@ -217,7 +229,7 @@ namespace Interface
             List<Book> foundBooks = DAL.searchBooks(query);
             printBooks(foundBooks);
 
-            Console.WriteLine("\nPress any key to continue....");
+            Console.WriteLine("\n\nPress any key to continue....");
             Console.ReadKey(false);
         }
 
